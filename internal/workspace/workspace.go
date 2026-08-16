@@ -67,3 +67,28 @@ func List() ([]db.Workspace, error) {
 	defer conn.Close()
 	return db.ListWorkspaces(conn)
 }
+
+func Delete(name string) (string, error) {
+	conn, err := db.Open()
+	if err != nil {
+		return "", err
+	}
+	defer conn.Close()
+
+	path, err := db.FindWorkspace(conn, name)
+	if err != nil {
+		return "", err
+	}
+
+	// DBを先に消しディレクトリの削除に失敗すると、ディレクトリの追跡が不可能になるため
+	err = os.RemoveAll(path)
+	if err != nil {
+		return "", fmt.Errorf("failed to remove workspace dir: %w", err)
+	}
+
+	err = db.DeleteWorkspace(conn, name)
+	if err != nil {
+		return "", err
+	}
+	return path, nil
+}

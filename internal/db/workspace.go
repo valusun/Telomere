@@ -64,3 +64,11 @@ func ListWorkspaces(conn *sql.DB) ([]Workspace, error) {
 	}
 	return workspaces, nil
 }
+
+func DeleteWorkspace(conn *sql.DB, name string) error {
+	_, err := conn.Exec("DELETE FROM workspaces WHERE name = ?", name)
+	if err != nil {
+		return fmt.Errorf("delete workspace: %w", err)
+	}
+	return nil
+}
