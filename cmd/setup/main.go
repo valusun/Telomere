@@ -1,13 +1,12 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
 	"log"
 	"os"
-	"path/filepath"
 
 	"github.com/valusun/Telomere/internal/db"
+	"github.com/valusun/Telomere/internal/workspace"
 )
 
 func makeDirectory(path string) error {
@@ -18,12 +17,13 @@ func makeDirectory(path string) error {
 	return nil
 }
 
-func makeDatabase(path string) error {
-	conn, err := sql.Open("sqlite3", filepath.Join(path, "telomere.db"))
+func makeDatabase() error {
+	conn, err := db.Open()
 	if err != nil {
-		return fmt.Errorf("failed to open database: %w", err)
+		return err
 	}
 	defer conn.Close()
+
 	err = db.Initialize(conn)
 	if err != nil {
 		return fmt.Errorf("failed to initialize database: %w", err)
@@ -32,19 +32,18 @@ func makeDatabase(path string) error {
 }
 
 func main() {
-	home, err := os.UserHomeDir()
+	// MkdirAll が ~/.telomere ごと作るので、workspaces までを一度に掘れば足りる
+	workspacesPath, err := workspace.Dir()
 	if err != nil {
 		log.Fatal(err)
 	}
-	telomerePath := filepath.Join(home, ".telomere")
-	workspacesPath := filepath.Join(telomerePath, "workspaces")
 
 	err = makeDirectory(workspacesPath)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	err = makeDatabase(telomerePath)
+	err = makeDatabase()
 	if err != nil {
 		log.Fatal(err)
 	}

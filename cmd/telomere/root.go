@@ -7,8 +7,9 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "telomere",
-	Short: "Telomere CLI",
+	Use:          "telomere",
+	Short:        "Telomere CLI",
+	SilenceUsage: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()
 	},

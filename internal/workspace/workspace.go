@@ -1,35 +1,42 @@
 package workspace
 
 import (
-	"database/sql"
 	"fmt"
 	"os"
 	"path/filepath"
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/valusun/Telomere/internal/config"
 	"github.com/valusun/Telomere/internal/db"
 )
+
+func Dir() (string, error) {
+	root, err := config.Dir()
+	if err != nil {
+		return "", err
+	}
+	return filepath.Join(root, "workspaces"), nil
+}
 
 func Create(name string, ttlDays int) (string, error) {
 	id := uuid.NewString()
 	expiresAt := time.Now().AddDate(0, 0, ttlDays).Unix()
 
 	// create target workspace directory
-	home, err := os.UserHomeDir()
+	workspaceDir, err := Dir()
 	if err != nil {
-		return "", fmt.Errorf("failed to get user home dir: %w", err)
+		return "", fmt.Errorf("failed to get workspace dir: %w", err)
 	}
-	path := filepath.Join(home, ".telomere", "workspaces", id)
+	path := filepath.Join(workspaceDir, id)
 	err = os.MkdirAll(path, 0755)
 	if err != nil {
 		return "", fmt.Errorf("failed to create workspace dir: %w", err)
 	}
 
-	dbPath := filepath.Join(home, ".telomere", "telomere.db")
-	conn, err := sql.Open("sqlite3", dbPath)
+	conn, err := db.Open()
 	if err != nil {
-		return "", fmt.Errorf("failed to open database: %w", err)
+		return "", err
 	}
 	defer conn.Close()
 
@@ -41,4 +48,13 @@ func Create(name string, ttlDays int) (string, error) {
 	}
 
 	return path, nil
+}
+
+func Find(name string) (string, error) {
+	conn, err := db.Open()
+	if err != nil {
+		return "", err
+	}
+	defer conn.Close()
+	return db.FindWorkspace(conn, name)
 }
