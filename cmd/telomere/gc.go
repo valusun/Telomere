@@ -14,6 +14,7 @@ var gcCmd = &cobra.Command{
 	Args:   cobra.NoArgs,
 	Hidden: true,
 	RunE: func(cmd *cobra.Command, args []string) error {
+		fmt.Println("Deleting expired workspaces...")
 		workspaces, err := workspace.FindExpiredWorkspaces()
 		if err != nil {
 			return err
@@ -34,6 +35,7 @@ var gcCmd = &cobra.Command{
 		if failed > 0 {
 			return fmt.Errorf("failed to delete %d of %d expired workspaces", failed, len(workspaces))
 		}
+		fmt.Println("all expired workspaces deleted")
 		return nil
 	},
 }
