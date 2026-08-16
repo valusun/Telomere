@@ -92,3 +92,12 @@ func Delete(name string) (string, error) {
 	}
 	return path, nil
 }
+
+func FindExpiredWorkspaces() ([]db.Workspace, error) {
+	conn, err := db.Open()
+	if err != nil {
+		return nil, err
+	}
+	defer conn.Close()
+	return db.FindExpiredWorkspaces(conn)
+}

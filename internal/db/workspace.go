@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/mattn/go-sqlite3"
 )
@@ -71,4 +72,25 @@ func DeleteWorkspace(conn *sql.DB, name string) error {
 		return fmt.Errorf("delete workspace: %w", err)
 	}
 	return nil
+}
+
+func FindExpiredWorkspaces(conn *sql.DB) ([]Workspace, error) {
+	rows, err := conn.Query("SELECT id, name, path, created_at, expires_at FROM workspaces WHERE expires_at < ?", time.Now().Unix())
+	if err != nil {
+		return nil, fmt.Errorf("find expired workspaces: %w", err)
+	}
+	defer rows.Close()
+
+	var workspaces []Workspace
+	for rows.Next() {
+		var workspace Workspace
+		if err := rows.Scan(&workspace.ID, &workspace.Name, &workspace.Path, &workspace.CreatedAt, &workspace.ExpiresAt); err != nil {
+			return nil, fmt.Errorf("find expired workspaces: %w", err)
+		}
+		workspaces = append(workspaces, workspace)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("find expired workspaces: %w", err)
+	}
+	return workspaces, nil
 }

@@ -1,0 +1,6 @@
+[Unit]
+Description=Telomere expired workspace garbage collection
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/telomere gc

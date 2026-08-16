@@ -1,0 +1,11 @@
+[Unit]
+Description=Run Telomere garbage collection hourly
+
+[Timer]
+OnCalendar=hourly
+# マシンを落としていて発火を逃した分は、次回起動時にまとめて実行する
+Persistent=true
+RandomizedDelaySec=5min
+
+[Install]
+WantedBy=timers.target
