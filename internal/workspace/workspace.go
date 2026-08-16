@@ -58,3 +58,12 @@ func Find(name string) (string, error) {
 	defer conn.Close()
 	return db.FindWorkspace(conn, name)
 }
+
+func List() ([]db.Workspace, error) {
+	conn, err := db.Open()
+	if err != nil {
+		return nil, err
+	}
+	defer conn.Close()
+	return db.ListWorkspaces(conn)
+}

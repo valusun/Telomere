@@ -11,7 +11,7 @@ import (
 
 var pathCmd = &cobra.Command{
 	Use:   "path <name>",
-	Short: "view the path of a specific workspace",
+	Short: "View the path of a specific workspace",
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		name := args[0]
