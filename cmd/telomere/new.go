@@ -29,7 +29,9 @@ var newCmd = &cobra.Command{
 			}
 			return fmt.Errorf("failed to create workspace: %w", err)
 		}
-		fmt.Println("workspace created:", path)
+		fmt.Printf("✓ workspace %q created\n", name)
+		fmt.Printf("  %s\n\n", path)
+		fmt.Printf("→ cd \"$(telomere path %s)\"\n", name)
 		return nil
 	},
 }
