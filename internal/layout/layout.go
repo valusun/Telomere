@@ -11,6 +11,7 @@ import (
 
 type WorkspaceView struct {
 	Name      string
+	Path      string
 	CreatedAt int64
 	ExpiresAt int64
 }
@@ -74,6 +75,7 @@ func ViewList(workspaces []WorkspaceView) error {
 
 type workspaceJSON struct {
 	Name             string `json:"name"`
+	Path             string `json:"path"`
 	CreatedAt        string `json:"created_at"`
 	ExpiresAt        string `json:"expires_at"`
 	RemainingPercent int    `json:"remaining_percent"`
@@ -89,6 +91,7 @@ func ViewListJSON(workspaces []WorkspaceView) error {
 		expiresAt := time.Unix(workspace.ExpiresAt, 0)
 		rows = append(rows, workspaceJSON{
 			Name:             workspace.Name,
+			Path:             workspace.Path,
 			CreatedAt:        createdAt.Format(time.RFC3339),
 			ExpiresAt:        expiresAt.Format(time.RFC3339),
 			RemainingPercent: remainingPercent(createdAt, expiresAt, now),
