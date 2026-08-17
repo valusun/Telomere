@@ -1,6 +1,7 @@
 package layout
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"strings"
@@ -69,4 +70,32 @@ func ViewList(workspaces []WorkspaceView) error {
 		return err
 	}
 	return nil
+}
+
+type workspaceJSON struct {
+	Name             string `json:"name"`
+	CreatedAt        string `json:"created_at"`
+	ExpiresAt        string `json:"expires_at"`
+	RemainingPercent int    `json:"remaining_percent"`
+}
+
+func ViewListJSON(workspaces []WorkspaceView) error {
+	now := time.Now()
+
+	// nil のままだと null になり、jq などで扱いづらいので空配列を保証する
+	rows := make([]workspaceJSON, 0, len(workspaces))
+	for _, workspace := range workspaces {
+		createdAt := time.Unix(workspace.CreatedAt, 0)
+		expiresAt := time.Unix(workspace.ExpiresAt, 0)
+		rows = append(rows, workspaceJSON{
+			Name:             workspace.Name,
+			CreatedAt:        createdAt.Format(time.RFC3339),
+			ExpiresAt:        expiresAt.Format(time.RFC3339),
+			RemainingPercent: remainingPercent(createdAt, expiresAt, now),
+		})
+	}
+
+	enc := json.NewEncoder(os.Stdout)
+	enc.SetIndent("", "  ")
+	return enc.Encode(rows)
 }

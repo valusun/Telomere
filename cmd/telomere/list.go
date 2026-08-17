@@ -11,6 +11,11 @@ var listCmd = &cobra.Command{
 	Short: "List all workspaces",
 	Args:  cobra.NoArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
+		asJSON, err := cmd.Flags().GetBool("json")
+		if err != nil {
+			return err
+		}
+
 		workspaces, err := workspace.List()
 		if err != nil {
 			return err
@@ -24,14 +29,15 @@ var listCmd = &cobra.Command{
 				ExpiresAt: w.ExpiresAt,
 			})
 		}
-		err = layout.ViewList(rows)
-		if err != nil {
-			return err
+
+		if asJSON {
+			return layout.ViewListJSON(rows)
 		}
-		return nil
+		return layout.ViewList(rows)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(listCmd)
+	listCmd.Flags().Bool("json", false, "output as JSON")
 }
