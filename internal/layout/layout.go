@@ -61,8 +61,8 @@ func ViewList(workspaces []WorkspaceView) error {
 		expiresAt := time.Unix(workspace.ExpiresAt, 0)
 		fmt.Fprintf(w, "%s\t%s\t%s\t%s\n",
 			workspace.Name,
-			createdAt.Format(time.DateOnly),
-			expiresAt.Format(time.DateOnly),
+			createdAt.Format(time.DateTime),
+			expiresAt.Format(time.DateTime),
 			renderTelomere(remainingPercent(createdAt, expiresAt, now)),
 		)
 	}
