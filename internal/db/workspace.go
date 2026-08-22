@@ -33,16 +33,16 @@ func InsertWorkspace(conn *sql.DB, id, name, path string, createdAt, expiresAt i
 	return fmt.Errorf("insert workspace: %w", err)
 }
 
-func FindWorkspace(conn *sql.DB, name string) (string, error) {
-	var path string
-	err := conn.QueryRow("SELECT path FROM workspaces WHERE name = ?", name).Scan(&path)
+func FindWorkspace(conn *sql.DB, name string) (Workspace, error) {
+	var workspace Workspace
+	err := conn.QueryRow("SELECT id, name, path, created_at, expires_at FROM workspaces WHERE name = ?", name).Scan(&workspace.ID, &workspace.Name, &workspace.Path, &workspace.CreatedAt, &workspace.ExpiresAt)
 	if errors.Is(err, sql.ErrNoRows) {
-		return "", ErrWorkspaceNotFound
+		return workspace, ErrWorkspaceNotFound
 	}
 	if err != nil {
-		return "", fmt.Errorf("find workspace: %w", err)
+		return workspace, fmt.Errorf("find workspace: %w", err)
 	}
-	return path, nil
+	return workspace, nil
 }
 
 func ListWorkspaces(conn *sql.DB) ([]Workspace, error) {
@@ -93,4 +93,12 @@ func FindExpiredWorkspaces(conn *sql.DB) ([]Workspace, error) {
 		return nil, fmt.Errorf("find expired workspaces: %w", err)
 	}
 	return workspaces, nil
+}
+
+func UpdateWorkspaceExpiry(conn *sql.DB, name string, expiresAt int64) error {
+	_, err := conn.Exec("UPDATE workspaces SET expires_at = ? WHERE name = ?", expiresAt, name)
+	if err != nil {
+		return fmt.Errorf("update workspace expiry: %w", err)
+	}
+	return nil
 }

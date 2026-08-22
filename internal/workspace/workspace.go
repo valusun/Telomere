@@ -50,10 +50,10 @@ func Create(name string, ttlDays int) (string, error) {
 	return path, nil
 }
 
-func Find(name string) (string, error) {
+func Find(name string) (db.Workspace, error) {
 	conn, err := db.Open()
 	if err != nil {
-		return "", err
+		return db.Workspace{}, err
 	}
 	defer conn.Close()
 	return db.FindWorkspace(conn, name)
@@ -75,10 +75,11 @@ func Delete(name string) (string, error) {
 	}
 	defer conn.Close()
 
-	path, err := db.FindWorkspace(conn, name)
+	workspace, err := db.FindWorkspace(conn, name)
 	if err != nil {
 		return "", err
 	}
+	path := workspace.Path
 
 	// DBを先に消しディレクトリの削除に失敗すると、ディレクトリの追跡が不可能になるため
 	err = os.RemoveAll(path)
@@ -100,4 +101,24 @@ func FindExpiredWorkspaces() ([]db.Workspace, error) {
 	}
 	defer conn.Close()
 	return db.FindExpiredWorkspaces(conn)
+}
+
+func ExtendExpiry(name string, ttlDays int) error {
+	conn, err := db.Open()
+	if err != nil {
+		return err
+	}
+	defer conn.Close()
+	data, err := db.FindWorkspace(conn, name)
+	if err != nil {
+		return err
+	}
+
+	// expiredAtに加算して更新
+	updatedExpiresAt := time.Unix(data.ExpiresAt, 0).AddDate(0, 0, ttlDays)
+	err = db.UpdateWorkspaceExpiry(conn, name, updatedExpiresAt.Unix())
+	if err != nil {
+		return err
+	}
+	return nil
 }
