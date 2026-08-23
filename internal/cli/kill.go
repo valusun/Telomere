@@ -1,4 +1,4 @@
-package main
+package cli
 
 import (
 	"errors"
@@ -9,24 +9,24 @@ import (
 	"github.com/valusun/Telomere/internal/workspace"
 )
 
-var pathCmd = &cobra.Command{
-	Use:   "path <name>",
-	Short: "View the path of a specific workspace",
+var killCmd = &cobra.Command{
+	Use:   "kill <name>",
+	Short: "Delete a workspace",
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		name := args[0]
-		workspace, err := workspace.Find(name)
+		path, err := workspace.Delete(name)
 		if err != nil {
 			if errors.Is(err, db.ErrWorkspaceNotFound) {
 				return fmt.Errorf("workspace %q not found", name)
 			}
-			return fmt.Errorf("failed to find workspace: %w", err)
+			return err
 		}
-		fmt.Println(workspace.Path)
+		fmt.Println("workspace deleted: " + path)
 		return nil
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(pathCmd)
+	rootCmd.AddCommand(killCmd)
 }

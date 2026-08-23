@@ -1,8 +1,6 @@
-package main
+package cli
 
 import (
-	"log"
-
 	"github.com/spf13/cobra"
 	"github.com/valusun/Telomere/internal/ttl"
 	"github.com/valusun/Telomere/internal/workspace"
@@ -10,7 +8,7 @@ import (
 
 var extendCmd = &cobra.Command{
 	Use:   "extend <name>",
-	Short: "Extend telomere ttl",
+	Short: "Extend telomere expired",
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		name := args[0]
@@ -31,8 +29,5 @@ var extendCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(extendCmd)
 	extendCmd.Flags().StringP("ttl", "t", "", "workspace current expiredAt add <ttl> (e.g. 3d)")
-	err := extendCmd.MarkFlagRequired("ttl")
-	if err != nil {
-		log.Fatal("failed to mark ttl flag as required: ", err)
-	}
+	extendCmd.MarkFlagRequired("ttl")
 }
