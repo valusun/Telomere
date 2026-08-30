@@ -1,10 +1,22 @@
-# Telomere
+<div align="center">
 
-Workspaces with an expiration date.
+# 🧬 Telomere
 
-Create a scratch directory, give it a TTL, and forget about it — Telomere deletes it when the time is up.
+**Workspaces with an expiration date.**
 
-## Install
+Create a scratch directory, give it a TTL, and forget about it —<br>
+Telomere deletes it when the time is up.
+
+```
+NAME      CREATED      EXPIRES      TELOMERE
+scratch   2026-08-16   2026-08-19   ███████░░░  70%
+```
+
+</div>
+
+---
+
+## 📦 Install
 
 ```sh
 git clone https://github.com/valusun/Telomere.git
@@ -12,9 +24,9 @@ cd Telomere
 ./setup.sh
 ```
 
-Installs `telomere` into `~/.local/bin` and initializes `~/.telomere`.
+> Installs `telomere` into `~/.local/bin` and initializes `~/.telomere`.
 
-## Usage
+## 🚀 Usage
 
 ```sh
 # create a workspace that lives for 3 days
@@ -30,12 +42,7 @@ telomere list
 telomere kill scratch
 ```
 
-```
-NAME      CREATED      EXPIRES      TELOMERE
-scratch   2026-08-16   2026-08-19   ███████░░░  70%
-```
-
-## Auto cleanup
+## ♻️ Auto cleanup
 
 Expired workspaces are removed by `telomere gc`. Run it hourly with systemd:
 
@@ -45,6 +52,10 @@ cp contrib/systemd/telomere-gc.* ~/.config/systemd/user/
 systemctl --user enable --now telomere-gc.timer
 ```
 
-## License
+## 📄 License
 
 Apache-2.0
+
+<div align="center">
+<sub>Every workspace has a lifespan.</sub>
+</div>
