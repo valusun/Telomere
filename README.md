@@ -7,11 +7,6 @@
 Create a scratch directory, give it a TTL, and forget about it —<br>
 Telomere deletes it when the time is up.
 
-```
-NAME      CREATED      EXPIRES      TELOMERE
-scratch   2026-08-16   2026-08-19   ███████░░░  70%
-```
-
 </div>
 
 ---
