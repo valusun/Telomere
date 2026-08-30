@@ -1,4 +1,4 @@
-package ttl
+package workspace
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func Parse(s string) (int, error) {
+func ParseTTL(s string) (int, error) {
 	if s == "" || !strings.HasSuffix(s, "d") {
 		return 0, fmt.Errorf("invalid ttl %q: e.g. \"3d\", \"1d\"", s)
 	}

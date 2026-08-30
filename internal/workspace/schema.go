@@ -1,4 +1,4 @@
-package db
+package workspace
 
 import (
 	"database/sql"
@@ -7,7 +7,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func makeWorkspaces(db *sql.DB) error {
+func MakeSchema(db *sql.DB) error {
 	_, err := db.Exec(`
 		CREATE TABLE IF NOT EXISTS workspaces (
 			id text Primary key NOT NULL,
@@ -24,8 +24,4 @@ func makeWorkspaces(db *sql.DB) error {
 		return fmt.Errorf("create workspaces table: %w", err)
 	}
 	return nil
-}
-
-func Initialize(conn *sql.DB) error {
-	return makeWorkspaces(conn)
 }
