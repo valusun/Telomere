@@ -50,7 +50,3 @@ systemctl --user enable --now telomere-gc.timer
 ## 📄 License
 
 Apache-2.0
-
-<div align="center">
-<sub>Every workspace has a lifespan.</sub>
-</div>
