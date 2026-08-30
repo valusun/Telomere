@@ -1,4 +1,4 @@
-package layout
+package cli
 
 import (
 	"encoding/json"
@@ -84,7 +84,7 @@ type workspaceJSON struct {
 func ViewListJSON(workspaces []WorkspaceView) error {
 	now := time.Now()
 
-	// nil のままだと null になり、jq などで扱いづらいので空配列を保証する
+	// nilのままだと扱いづらいので空配列を保証する
 	rows := make([]workspaceJSON, 0, len(workspaces))
 	for _, workspace := range workspaces {
 		createdAt := time.Unix(workspace.CreatedAt, 0)

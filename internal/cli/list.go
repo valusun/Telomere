@@ -4,7 +4,6 @@ import (
 	"log"
 
 	"github.com/spf13/cobra"
-	"github.com/valusun/Telomere/internal/layout"
 	"github.com/valusun/Telomere/internal/workspace"
 )
 
@@ -23,9 +22,9 @@ var listCmd = &cobra.Command{
 			return err
 		}
 
-		rows := make([]layout.WorkspaceView, 0, len(workspaces))
+		rows := make([]WorkspaceView, 0, len(workspaces))
 		for _, w := range workspaces {
-			rows = append(rows, layout.WorkspaceView{
+			rows = append(rows, WorkspaceView{
 				Name:      w.Name,
 				Path:      w.Path,
 				CreatedAt: w.CreatedAt,
@@ -34,9 +33,9 @@ var listCmd = &cobra.Command{
 		}
 
 		if asJSON {
-			return layout.ViewListJSON(rows)
+			return ViewListJSON(rows)
 		}
-		return layout.ViewList(rows)
+		return ViewList(rows)
 	},
 }
 
