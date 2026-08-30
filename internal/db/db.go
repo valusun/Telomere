@@ -3,17 +3,16 @@ package db
 import (
 	"database/sql"
 	"fmt"
-	"path/filepath"
 
 	"github.com/valusun/Telomere/internal/config"
 )
 
 func Open() (*sql.DB, error) {
-	dir, err := config.Dir()
+	paths, err := config.SetTelomerePaths()
 	if err != nil {
 		return nil, err
 	}
-	conn, err := sql.Open("sqlite3", filepath.Join(dir, "telomere.db"))
+	conn, err := sql.Open("sqlite3", paths.DatabasePath)
 	if err != nil {
 		return nil, fmt.Errorf("failed to open database: %w", err)
 	}

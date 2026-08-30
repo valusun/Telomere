@@ -11,25 +11,17 @@ import (
 	"github.com/valusun/Telomere/internal/db"
 )
 
-func Dir() (string, error) {
-	root, err := config.Dir()
-	if err != nil {
-		return "", err
-	}
-	return filepath.Join(root, "workspaces"), nil
-}
-
 func Create(name string, ttlDays int) (string, error) {
 	id := uuid.NewString()
 	expiresAt := time.Now().AddDate(0, 0, ttlDays).Unix()
 
 	// create target workspace directory
-	workspaceDir, err := Dir()
+	paths, err := config.SetTelomerePaths()
 	if err != nil {
 		return "", fmt.Errorf("failed to get workspace dir: %w", err)
 	}
-	path := filepath.Join(workspaceDir, id)
-	err = os.MkdirAll(path, 0755)
+	workspacePath := filepath.Join(paths.WorkspaceDir, id)
+	err = os.MkdirAll(workspacePath, 0755)
 	if err != nil {
 		return "", fmt.Errorf("failed to create workspace dir: %w", err)
 	}
@@ -40,14 +32,14 @@ func Create(name string, ttlDays int) (string, error) {
 	}
 	defer conn.Close()
 
-	err = db.InsertWorkspace(conn, id, name, path, time.Now().Unix(), expiresAt)
+	err = db.InsertWorkspace(conn, id, name, workspacePath, time.Now().Unix(), expiresAt)
 	if err != nil {
 		// 実害はないが邪魔なので消しておく
-		os.RemoveAll(path)
+		os.RemoveAll(workspacePath)
 		return "", fmt.Errorf("failed to insert workspace: %w", err)
 	}
 
-	return path, nil
+	return workspacePath, nil
 }
 
 func Find(name string) (db.Workspace, error) {
