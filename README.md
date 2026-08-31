@@ -13,6 +13,8 @@ Telomere deletes it when the time is up.
 
 ## 📦 Install
 
+Requires Go 1.26.6 or later and a C compiler (`gcc` or `clang`), since the SQLite driver is cgo-based.
+
 ```sh
 git clone https://github.com/valusun/Telomere.git
 cd Telomere
