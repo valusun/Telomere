@@ -35,7 +35,7 @@ func (s *Service) Create(ctx context.Context, name string, ttl string) (Workspac
 		return Workspace{}, fmt.Errorf("failed to get workspace dir: %w", err)
 	}
 	workspacePath := filepath.Join(paths.WorkspaceDir, id)
-	err = os.MkdirAll(workspacePath, 0755)
+	err = os.MkdirAll(workspacePath, 0700)
 	if err != nil {
 		return Workspace{}, fmt.Errorf("failed to create workspace dir: %w", err)
 	}
