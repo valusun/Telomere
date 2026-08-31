@@ -17,5 +17,8 @@ func ParseTTL(s string) (int, error) {
 	if num <= 0 {
 		return 0, fmt.Errorf("invalid ttl %q: must be a positive number of days", s)
 	}
+	if num >= 365 {
+		return 0, fmt.Errorf("invalid ttl %q: must be less than 365 days", s)
+	}
 	return num, nil
 }

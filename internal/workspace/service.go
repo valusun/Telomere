@@ -20,6 +20,9 @@ func NewService(repository Repository) *Service {
 }
 
 func (s *Service) Create(ctx context.Context, name string, ttl string) (Workspace, error) {
+	if err := ValidateName(name); err != nil {
+		return Workspace{}, err
+	}
 	ttlDays, err := ParseTTL(ttl)
 	if err != nil {
 		return Workspace{}, err
