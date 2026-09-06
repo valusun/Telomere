@@ -25,7 +25,7 @@ func makeDatabaseFile(path string) error {
 }
 
 func Open() (*sql.DB, error) {
-	paths, err := config.SetTelomerePaths()
+	paths, err := config.SetupPaths()
 	if err != nil {
 		return nil, err
 	}

@@ -33,7 +33,7 @@ func (s *Service) Create(ctx context.Context, name string, ttl string) (Workspac
 	expiresAt := now.AddDate(0, 0, ttlDays).Unix()
 
 	// create workspace directory
-	paths, err := config.SetTelomerePaths()
+	paths, err := config.SetupPaths()
 	if err != nil {
 		return Workspace{}, fmt.Errorf("failed to get workspace dir: %w", err)
 	}
@@ -61,7 +61,7 @@ func (s *Service) Create(ctx context.Context, name string, ttl string) (Workspac
 }
 
 func (s *Service) List(ctx context.Context) ([]Workspace, error) {
-	return s.repository.GetWorkspaces(ctx)
+	return s.repository.List(ctx)
 }
 
 func (s *Service) Find(ctx context.Context, name string) (Workspace, error) {
@@ -86,7 +86,7 @@ func (s *Service) Delete(ctx context.Context, name string) (string, error) {
 }
 
 func (s *Service) FindExpiredWorkspaces(ctx context.Context) ([]Workspace, error) {
-	ws, err := s.repository.GetWorkspaces(ctx)
+	ws, err := s.repository.List(ctx)
 	if err != nil {
 		return nil, err
 	}

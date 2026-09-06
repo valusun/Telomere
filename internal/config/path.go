@@ -12,15 +12,7 @@ type Paths struct {
 	DatabasePath string
 }
 
-func makeDirs(path string) error {
-	err := os.MkdirAll(path, 0700)
-	if err != nil {
-		return fmt.Errorf("failed to make dirs: %w", err)
-	}
-	return nil
-}
-
-func SetTelomerePaths() (*Paths, error) {
+func SetupPaths() (*Paths, error) {
 	home, err := os.UserHomeDir()
 	if err != nil {
 		return nil, fmt.Errorf("failed to get user home dir: %w", err)
@@ -29,8 +21,8 @@ func SetTelomerePaths() (*Paths, error) {
 	workspaceDir := filepath.Join(root, "workspaces")
 
 	for _, dir := range []string{root, workspaceDir} {
-		if err := makeDirs(dir); err != nil {
-			return nil, err
+		if err := os.MkdirAll(dir, 0700); err != nil {
+			return nil, fmt.Errorf("failed to make dirs: %w", err)
 		}
 	}
 

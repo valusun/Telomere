@@ -28,7 +28,7 @@ func (r *Repository) Insert(ctx context.Context, w Workspace) error {
 	return fmt.Errorf("failed to save workspace: %w", err)
 }
 
-func (r *Repository) GetWorkspaces(ctx context.Context) ([]Workspace, error) {
+func (r *Repository) List(ctx context.Context) ([]Workspace, error) {
 	rows, err := r.db.QueryContext(ctx, "SELECT id, name, path, created_at, expires_at FROM workspaces ORDER BY created_at DESC")
 	if err != nil {
 		return nil, fmt.Errorf("failed to get workspaces: %w", err)

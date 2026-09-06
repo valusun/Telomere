@@ -18,7 +18,7 @@ func run() error {
 
 	repository := workspace.NewRepository(conn)
 	service := workspace.NewService(repository)
-	return cli.NewRootCommand(service).Execute()
+	return cli.NewRootCmd(service).Execute()
 }
 
 func main() {

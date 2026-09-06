@@ -11,7 +11,7 @@ func NewListCmd(service *workspace.Service) *cobra.Command {
 		Short: "List all workspaces",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			asJson, err := cmd.Flags().GetBool("json")
+			asJSON, err := cmd.Flags().GetBool("json")
 			if err != nil {
 				return err
 			}
@@ -30,7 +30,7 @@ func NewListCmd(service *workspace.Service) *cobra.Command {
 					ExpiresAt: w.ExpiresAt,
 				})
 			}
-			if asJson {
+			if asJSON {
 				return ViewListJSON(rows)
 			}
 			return ViewList(rows)

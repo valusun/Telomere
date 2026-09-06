@@ -8,7 +8,7 @@ import (
 )
 
 // NewNewCommandになるのは気持ち悪いので仕方なく…
-func NewCreatecmd(service *workspace.Service) *cobra.Command {
+func NewCreateCmd(service *workspace.Service) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "new <name>",
 		Short: "Create a new empty workspace",
@@ -22,7 +22,7 @@ func NewCreatecmd(service *workspace.Service) *cobra.Command {
 			name := args[0]
 			created, err := service.Create(cmd.Context(), name, ttlText)
 			if err != nil {
-				return err
+				return fmt.Errorf("create workspace: %w", err)
 			}
 
 			fmt.Printf("✓ workspace %q created\n", created.Name)

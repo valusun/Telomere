@@ -5,7 +5,7 @@ import (
 	"github.com/valusun/Telomere/internal/workspace"
 )
 
-func NewRootCommand(service *workspace.Service) *cobra.Command {
+func NewRootCmd(service *workspace.Service) *cobra.Command {
 	root := &cobra.Command{
 		Use:           "telomere",
 		Short:         "Telomere CLI",
@@ -13,7 +13,7 @@ func NewRootCommand(service *workspace.Service) *cobra.Command {
 		SilenceErrors: true,
 	}
 
-	root.AddCommand(NewCreatecmd(service))
+	root.AddCommand(NewCreateCmd(service))
 	root.AddCommand(NewListCmd(service))
 	root.AddCommand(NewPathCmd(service))
 	root.AddCommand(NewKillCmd(service))

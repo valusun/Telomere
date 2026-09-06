@@ -25,7 +25,7 @@ func makeDatabase() error {
 
 func main() {
 	// なければ内部で作成する
-	if _, err := config.SetTelomerePaths(); err != nil {
+	if _, err := config.SetupPaths(); err != nil {
 		log.Fatal(err)
 	}
 
