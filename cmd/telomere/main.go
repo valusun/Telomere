@@ -9,18 +9,20 @@ import (
 	"github.com/valusun/Telomere/internal/workspace"
 )
 
-func main() {
+func run() error {
 	conn, err := db.Open()
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "Error:", err)
-		os.Exit(1)
+		return err
 	}
+	defer conn.Close()
 
 	repository := workspace.NewRepository(conn)
 	service := workspace.NewService(repository)
-	root := cli.NewRootCommand(service)
+	return cli.NewRootCommand(service).Execute()
+}
 
-	if err := root.Execute(); err != nil {
+func main() {
+	if err := run(); err != nil {
 		fmt.Fprintln(os.Stderr, "Error:", err)
 		os.Exit(1)
 	}
