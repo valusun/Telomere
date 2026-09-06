@@ -11,18 +11,18 @@ import (
 */
 func ValidateName(name string) error {
 	if name == "" {
-		return fmt.Errorf("name must not be empty")
+		return fmt.Errorf("workspace name is required")
 	}
 	if !utf8.ValidString(name) {
-		return fmt.Errorf("invalid name: %q", name)
+		return fmt.Errorf("workspace name must be valid UTF-8")
 	}
 	if utf8.RuneCountInString(name) > 255 {
-		return fmt.Errorf("name must not exceed 255 characters")
+		return fmt.Errorf("workspace name must be at most 255 characters")
 	}
 	// 改行、タブ、ESCなどのUnicode制御文字を禁止
 	for _, r := range name {
 		if unicode.IsControl(r) {
-			return fmt.Errorf("name must not contain control characters")
+			return fmt.Errorf("workspace name is invalid")
 		}
 	}
 	return nil

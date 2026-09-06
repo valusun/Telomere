@@ -25,7 +25,7 @@ func NewGCCmd(service *workspace.Service) *cobra.Command {
 			for _, w := range ws {
 				path, err := service.Delete(cmd.Context(), w.Name)
 				if err != nil {
-					fmt.Fprintf(os.Stderr, "failed to delete workspace %q: %v\n", w.Name, err)
+					fmt.Fprintf(os.Stderr, "Error: %q: %v\n", w.Name, err)
 					failed++
 					continue
 				}

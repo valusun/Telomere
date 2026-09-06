@@ -7,9 +7,10 @@ import (
 
 func NewRootCommand(service *workspace.Service) *cobra.Command {
 	root := &cobra.Command{
-		Use:          "telomere",
-		Short:        "Telomere CLI",
-		SilenceUsage: true,
+		Use:           "telomere",
+		Short:         "Telomere CLI",
+		SilenceUsage:  true,
+		SilenceErrors: true,
 	}
 
 	root.AddCommand(NewCreatecmd(service))

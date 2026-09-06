@@ -8,17 +8,14 @@ import (
 
 func ParseTTL(s string) (int, error) {
 	if s == "" || !strings.HasSuffix(s, "d") {
-		return 0, fmt.Errorf("invalid ttl %q: e.g. \"3d\", \"1d\"", s)
+		return 0, fmt.Errorf("invalid TTL %q: use days, for example \"3d\"", s)
 	}
 	num, err := strconv.Atoi(strings.TrimSuffix(s, "d"))
-	if err != nil {
-		return 0, fmt.Errorf("invalid ttl %q: e.g. \"3d\", \"1d\"", s)
-	}
-	if num <= 0 {
-		return 0, fmt.Errorf("invalid ttl %q: must be a positive number of days", s)
+	if err != nil || num <= 0 {
+		return 0, fmt.Errorf("invalid TTL %q: use days, for example \"3d\"", s)
 	}
 	if num >= 365 {
-		return 0, fmt.Errorf("invalid ttl %q: must be less than 365 days", s)
+		return 0, fmt.Errorf("invalid TTL %q: must be less than 1 year (365 days)", s)
 	}
 	return num, nil
 }

@@ -55,7 +55,7 @@ func (s *Service) Create(ctx context.Context, name string, ttl string) (Workspac
 	if err != nil {
 		// 実害はないが邪魔なので消しておく
 		_ = os.RemoveAll(workspacePath)
-		return Workspace{}, fmt.Errorf("failed to insert workspace: %w", err)
+		return Workspace{}, err
 	}
 	return w, nil
 }
@@ -67,7 +67,7 @@ func (s *Service) List(ctx context.Context) ([]Workspace, error) {
 func (s *Service) Find(ctx context.Context, name string) (Workspace, error) {
 	workspace, err := s.repository.FindByName(ctx, name)
 	if err != nil {
-		return Workspace{}, fmt.Errorf("failed to get workspaces: %w", err)
+		return Workspace{}, err
 	}
 	return workspace, nil
 }

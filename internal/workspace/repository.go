@@ -25,13 +25,13 @@ func (r *Repository) Insert(ctx context.Context, w Workspace) error {
 	if errors.As(err, &sqliteErr) && sqliteErr.ExtendedCode == sqlite3.ErrConstraintUnique {
 		return ErrWorkspaceNameExists
 	}
-	return fmt.Errorf("insert workspace: %w", err)
+	return fmt.Errorf("failed to save workspace: %w", err)
 }
 
 func (r *Repository) GetWorkspaces(ctx context.Context) ([]Workspace, error) {
 	rows, err := r.db.QueryContext(ctx, "SELECT id, name, path, created_at, expires_at FROM workspaces ORDER BY created_at DESC")
 	if err != nil {
-		return nil, fmt.Errorf("list workspaces: %w", err)
+		return nil, fmt.Errorf("failed to get workspaces: %w", err)
 	}
 	defer rows.Close()
 
@@ -39,12 +39,12 @@ func (r *Repository) GetWorkspaces(ctx context.Context) ([]Workspace, error) {
 	for rows.Next() {
 		var workspace Workspace
 		if err := rows.Scan(&workspace.ID, &workspace.Name, &workspace.Path, &workspace.CreatedAt, &workspace.ExpiresAt); err != nil {
-			return nil, fmt.Errorf("list workspaces: %w", err)
+			return nil, fmt.Errorf("failed to get workspaces: %w", err)
 		}
 		workspaces = append(workspaces, workspace)
 	}
 	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf("list workspaces: %w", err)
+		return nil, fmt.Errorf("failed to get workspaces: %w", err)
 	}
 	return workspaces, nil
 }
@@ -56,7 +56,7 @@ func (r *Repository) FindByName(ctx context.Context, name string) (Workspace, er
 		return ws, ErrWorkspaceNotFound
 	}
 	if err != nil {
-		return ws, fmt.Errorf("find workspace: %w", err)
+		return ws, fmt.Errorf("failed to find workspace: %w", err)
 	}
 	return ws, nil
 }
@@ -64,7 +64,7 @@ func (r *Repository) FindByName(ctx context.Context, name string) (Workspace, er
 func (r *Repository) Delete(ctx context.Context, name string) error {
 	_, err := r.db.ExecContext(ctx, "DELETE FROM workspaces WHERE name = ?", name)
 	if err != nil {
-		return fmt.Errorf("delete workspace: %w", err)
+		return fmt.Errorf("failed to delete workspace: %w", err)
 	}
 	return nil
 }
@@ -72,7 +72,7 @@ func (r *Repository) Delete(ctx context.Context, name string) error {
 func (r *Repository) UpdateExpiresAt(ctx context.Context, name string, expiresAt int64) error {
 	_, err := r.db.ExecContext(ctx, "UPDATE workspaces SET expires_at = ? WHERE name = ?", expiresAt, name)
 	if err != nil {
-		return fmt.Errorf("update expires at: %w", err)
+		return fmt.Errorf("failed to update workspace expiry: %w", err)
 	}
 	return nil
 }

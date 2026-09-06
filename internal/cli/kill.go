@@ -1,7 +1,6 @@
 package cli
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/spf13/cobra"
@@ -17,9 +16,6 @@ func NewKillCmd(service *workspace.Service) *cobra.Command {
 			name := args[0]
 			path, err := service.Delete(cmd.Context(), name)
 			if err != nil {
-				if errors.Is(err, workspace.ErrWorkspaceNotFound) {
-					return fmt.Errorf("workspace %q not found", name)
-				}
 				return err
 			}
 			fmt.Println("workspace deleted: " + path)

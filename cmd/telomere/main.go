@@ -12,7 +12,7 @@ import (
 func main() {
 	conn, err := db.Open()
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "telomere:", err)
+		fmt.Fprintln(os.Stderr, "Error:", err)
 		os.Exit(1)
 	}
 
@@ -21,7 +21,7 @@ func main() {
 	root := cli.NewRootCommand(service)
 
 	if err := root.Execute(); err != nil {
-		fmt.Fprintln(os.Stderr, "telomere:", err)
+		fmt.Fprintln(os.Stderr, "Error:", err)
 		os.Exit(1)
 	}
 }

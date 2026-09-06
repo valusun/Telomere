@@ -1,7 +1,6 @@
 package cli
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/spf13/cobra"
@@ -17,10 +16,7 @@ func NewPathCmd(service *workspace.Service) *cobra.Command {
 			name := args[0]
 			w, err := service.Find(cmd.Context(), name)
 			if err != nil {
-				if errors.Is(err, workspace.ErrWorkspaceNotFound) {
-					return fmt.Errorf("workspace %q not found", name)
-				}
-				return fmt.Errorf("failed to find workspace: %w", err)
+				return err
 			}
 			fmt.Println(w.Path)
 			return nil

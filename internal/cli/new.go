@@ -22,7 +22,7 @@ func NewCreatecmd(service *workspace.Service) *cobra.Command {
 			name := args[0]
 			created, err := service.Create(cmd.Context(), name, ttlText)
 			if err != nil {
-				return fmt.Errorf("create workspace: %w", err)
+				return err
 			}
 
 			fmt.Printf("✓ workspace %q created\n", created.Name)
