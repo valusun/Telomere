@@ -6,7 +6,6 @@ import (
 	"os"
 
 	"github.com/valusun/Telomere/internal/config"
-	"github.com/valusun/Telomere/internal/workspace"
 )
 
 func makeDatabaseFile(path string) error {
@@ -37,8 +36,4 @@ func Open() (*sql.DB, error) {
 		return nil, fmt.Errorf("failed to open database: %w", err)
 	}
 	return conn, nil
-}
-
-func Initialize(conn *sql.DB) error {
-	return workspace.MakeSchema(conn)
 }

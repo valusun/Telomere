@@ -6,6 +6,7 @@ import (
 
 	"github.com/valusun/Telomere/internal/config"
 	"github.com/valusun/Telomere/internal/db"
+	"github.com/valusun/Telomere/internal/workspace"
 )
 
 func makeDatabase() error {
@@ -15,7 +16,7 @@ func makeDatabase() error {
 	}
 	defer conn.Close()
 
-	err = db.Initialize(conn)
+	err = workspace.MakeSchema(conn)
 	if err != nil {
 		return fmt.Errorf("failed to initialize database: %w", err)
 	}
