@@ -65,11 +65,7 @@ func (s *Service) List(ctx context.Context) ([]Workspace, error) {
 }
 
 func (s *Service) Find(ctx context.Context, name string) (Workspace, error) {
-	workspace, err := s.repository.FindByName(ctx, name)
-	if err != nil {
-		return Workspace{}, err
-	}
-	return workspace, nil
+	return s.repository.FindByName(ctx, name)
 }
 
 func (s *Service) Delete(ctx context.Context, name string) (string, error) {
@@ -87,7 +83,6 @@ func (s *Service) Delete(ctx context.Context, name string) (string, error) {
 		return "", err
 	}
 	return path, nil
-
 }
 
 func (s *Service) FindExpiredWorkspaces(ctx context.Context) ([]Workspace, error) {
@@ -96,8 +91,9 @@ func (s *Service) FindExpiredWorkspaces(ctx context.Context) ([]Workspace, error
 		return nil, err
 	}
 	expired := make([]Workspace, 0, len(ws))
+	now := time.Now().Unix()
 	for _, w := range ws {
-		if w.ExpiresAt < time.Now().Unix() {
+		if w.ExpiresAt < now {
 			expired = append(expired, w)
 		}
 	}
@@ -114,10 +110,6 @@ func (s *Service) ExtendExpiry(ctx context.Context, name string, ttl string) err
 		return err
 	}
 	updatedExpiresAt := time.Unix(ws.ExpiresAt, 0).AddDate(0, 0, ttlDays)
-	err = s.repository.UpdateExpiresAt(ctx, name, updatedExpiresAt.Unix())
-	if err != nil {
-		return err
-	}
-	return nil
+	return s.repository.UpdateExpiresAt(ctx, name, updatedExpiresAt.Unix())
 
 }

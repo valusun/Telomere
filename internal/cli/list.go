@@ -1,8 +1,6 @@
 package cli
 
 import (
-	"log"
-
 	"github.com/spf13/cobra"
 	"github.com/valusun/Telomere/internal/workspace"
 )
@@ -39,9 +37,6 @@ func NewListCmd(service *workspace.Service) *cobra.Command {
 		},
 	}
 	cmd.Flags().Bool("json", false, "output as a JSON")
-	err := cmd.Flags().MarkHidden("json")
-	if err != nil {
-		log.Fatal("failed to mark json flag as hidden: ", err)
-	}
+	_ = cmd.Flags().MarkHidden("json")
 	return cmd
 }

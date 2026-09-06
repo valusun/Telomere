@@ -1,7 +1,7 @@
 package workspace
 
 import (
-	"fmt"
+	"errors"
 	"unicode"
 	"unicode/utf8"
 )
@@ -11,18 +11,18 @@ import (
 */
 func ValidateName(name string) error {
 	if name == "" {
-		return fmt.Errorf("workspace name is required")
+		return errors.New("workspace name is required")
 	}
 	if !utf8.ValidString(name) {
-		return fmt.Errorf("workspace name must be valid UTF-8")
+		return errors.New("workspace name must be valid UTF-8")
 	}
 	if utf8.RuneCountInString(name) > 255 {
-		return fmt.Errorf("workspace name must be at most 255 characters")
+		return errors.New("workspace name must be at most 255 characters")
 	}
 	// 改行、タブ、ESCなどのUnicode制御文字を禁止
 	for _, r := range name {
 		if unicode.IsControl(r) {
-			return fmt.Errorf("workspace name is invalid")
+			return errors.New("workspace name is invalid")
 		}
 	}
 	return nil

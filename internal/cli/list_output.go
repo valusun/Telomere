@@ -66,11 +66,7 @@ func ViewList(workspaces []WorkspaceView) error {
 			renderTelomere(remainingPercent(createdAt, expiresAt, now)),
 		)
 	}
-	err := w.Flush()
-	if err != nil {
-		return err
-	}
-	return nil
+	return w.Flush()
 }
 
 type workspaceJSON struct {
